@@ -1,8 +1,5 @@
-"use client";
-
 import { useState } from "react";
-import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { logout } from "@/lib/features/auth/authSlice";
 import { useGetUnreadCountQuery } from "@/lib/services/notificationService";
@@ -47,8 +44,8 @@ export default function DashboardHeader({
   onRefresh,
 }: Props) {
   const dispatch  = useAppDispatch();
-  const router    = useRouter();
-  const pathname  = usePathname();
+  const navigate = useNavigate();
+  const { pathname }  = useLocation();
   const user      = useAppSelector((s) => s.auth.user);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -65,14 +62,14 @@ export default function DashboardHeader({
   const handleLogout = () => {
     setMenuOpen(false);
     dispatch(logout());
-    router.push("/login");
+    navigate("/login");
   };
 
   return (
     <header className="h-14 sm:h-16 bg-white dark:bg-slate-900 border-b border-[#E8E8EF] dark:border-slate-700 flex items-center justify-between px-3 sm:px-5 gap-2 shrink-0 sticky top-0 z-30">
 
       {/* ── Logo ── */}
-      <Link href="/" className="flex items-center gap-2 shrink-0 group">
+      <Link to="/" className="flex items-center gap-2 shrink-0 group">
         <div className="w-8 h-8 rounded-lg bg-[#059669] flex items-center justify-center shadow-md shadow-[#059669]/30 group-hover:shadow-[#059669]/50 transition-shadow">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <rect x="1" y="1" width="4" height="12" rx="1" fill="white"/>
@@ -80,7 +77,7 @@ export default function DashboardHeader({
           </svg>
         </div>
         <span className="font-bold text-[15px] text-[#1E293B] dark:text-white tracking-tight hidden sm:block">
-          TaskFlow
+          Ponleu
         </span>
       </Link>
 
@@ -111,7 +108,7 @@ export default function DashboardHeader({
 
         {/* Notifications bell */}
         <Link
-          href="/dashboard/notifications"
+          to="/dashboard/notifications"
           className="relative w-9 h-9 rounded-lg flex items-center justify-center text-[#64748B] dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           aria-label="Notifications"
         >
@@ -167,7 +164,7 @@ export default function DashboardHeader({
                     return (
                       <Link
                         key={href}
-                        href={href}
+                        to={href}
                         onClick={() => setMenuOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors group ${
                           isActive

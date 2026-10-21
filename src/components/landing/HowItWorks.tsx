@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { HOW_IT_WORKS, SPRINT_PREVIEW } from "@/data/features";
+import { Link } from "react-router";
 import SectionHeader from "@/components/common/SectionHeader";
 
 export default function HowItWorks() {
@@ -32,7 +32,7 @@ export default function HowItWorks() {
           </ol>
 
           <Link
-            href="/register"
+            to="/register"
             className="mt-8 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-lg hover:shadow-brand-500/30"
           >
             Try it now →

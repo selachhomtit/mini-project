@@ -67,7 +67,7 @@ export const CORE_FEATURES: Feature[] = [
   },
 ];
 
-/** Features that make TaskFlow fit teams in Cambodia. */
+/** Features that make Ponleu fit teams in Cambodia. */
 export const LOCAL_FEATURES: Feature[] = [
   {
     icon: Languages,
@@ -94,7 +94,7 @@ export const LOCAL_FEATURES: Feature[] = [
     icon: MoonStar,
     title: "Dark mode",
     description:
-      "Late-night study sessions are easier on the eyes. TaskFlow remembers your theme on every visit.",
+      "Late-night study sessions are easier on the eyes. Ponleu remembers your theme on every visit.",
     tone: "bg-slate-200 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
   },
   {

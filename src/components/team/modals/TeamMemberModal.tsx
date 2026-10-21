@@ -1,6 +1,4 @@
 // TeamMemberModal.tsx
-"use client";
-
 import { X } from "lucide-react";
 import { getAvatarColor, getInitials } from "@/lib/features/team/team.utils";
 import type { TeamMember } from "@/lib/features/types/task-type";

@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setCredentials } from "@/lib/features/auth/authSlice";

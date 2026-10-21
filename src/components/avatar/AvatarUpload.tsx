@@ -1,5 +1,3 @@
-"use client";
-
 import { useRef, useState } from "react";
 import { Upload, Loader, Check, X } from "lucide-react";
 import { getErrorMessage } from "@/lib/utils";

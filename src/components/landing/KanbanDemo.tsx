@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { selectCard, moveCard } from "@/lib/features/kanban/kanbanSlice";

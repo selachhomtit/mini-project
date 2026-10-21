@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { PLANS } from "@/data/pricing";
 import SectionHeader from "@/components/common/SectionHeader";
 import PricingCard from "./PricingCard";
@@ -18,13 +17,6 @@ export default function Pricing() {
             <PricingCard key={plan.name} plan={plan} />
           ))}
         </div>
-
-        <p className="mt-10 text-center text-sm text-slate-500 dark:text-slate-400">
-          Need the details?{" "}
-          <Link href="/pricing" className="font-semibold text-brand-500 hover:underline">
-            Compare all plans →
-          </Link>
-        </p>
       </div>
     </section>
   );

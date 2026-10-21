@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   ChevronRight,
@@ -12,6 +10,7 @@ import type { Team } from "@/lib/features/types/task-type";
 import { useGetTeamMembersQuery } from "@/lib/services/teamService";
 import { TEAM_GRADIENTS, TEAM_ICON_BG } from "@/lib/features/team/team.constants";
 import { getAvatarColor, getInitials } from "@/lib/features/team/team.utils";
+import { confirmDialog } from "@/lib/feedback";
 
 type Props = {
   team: Team;
@@ -77,9 +76,9 @@ export default function TeamCard({
                   </button>
 
                   <button
-                    onClick={() => {
-                      if (confirm(`Delete "${team.name}"?`)) onDelete();
+                    onClick={async () => {
                       setMenuOpen(false);
+                      if (await confirmDialog({ title: `Delete "${team.name}"?`, description: "All of this team's projects and tasks will be deleted." })) onDelete();
                     }}
                     className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
                   >

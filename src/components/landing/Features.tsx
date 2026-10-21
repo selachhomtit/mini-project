@@ -1,5 +1,3 @@
-"use client";
-
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { CORE_FEATURES } from "@/data/features";
 import SectionHeader from "@/components/common/SectionHeader";

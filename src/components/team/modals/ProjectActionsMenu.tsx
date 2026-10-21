@@ -1,5 +1,3 @@
-"use client";
-
 import { Edit2, Trash2 } from "lucide-react";
 import type { Project } from "@/lib/features/types/task-type";
 

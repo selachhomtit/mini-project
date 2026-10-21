@@ -4,7 +4,7 @@ import { db, delay, ok, paginate, save } from "./localDb";
 
 export const notificationService = baseService.injectEndpoints({
   // Hot reload re-runs this file in development; replace the old endpoints instead of warning.
-  overrideExisting: process.env.NODE_ENV === "development",
+  overrideExisting: import.meta.env.DEV,
   endpoints: (builder) => ({
     getNotifications: builder.query<PageResponse<Notification>, { page?: number; size?: number }>({
       async queryFn({ page = 0, size = 20 }) {

@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { X, Loader } from "lucide-react";
 import { useUpdateProjectTaskMutation } from "@/lib/services/taskService";

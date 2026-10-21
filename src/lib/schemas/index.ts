@@ -72,7 +72,7 @@ export const updateProfileSchema = z.object({
       "Username can only contain letters, numbers, and underscores",
     ),
   email: z.string().email("Invalid email address"),
-  gender: z.string()
+  gender: z.string().optional(),
 });
 export const changePasswordSchema = z
   .object({

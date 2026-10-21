@@ -1,5 +1,3 @@
-"use client";
-
 interface ProjectProgress {
   projectId: string;
   projectName: string;

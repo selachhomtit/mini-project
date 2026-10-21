@@ -1,8 +1,5 @@
-"use client";
-
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useTheme } from "@/lib/contexts/ThemeContext";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
@@ -15,8 +12,6 @@ import { Sun, Moon, Globe, Bell, User, LogOut, Settings, Menu, X } from "lucide-
 const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "Features", path: "/features" },
-  { name: "Pricing", path: "/pricing" },
-  { name: "About Us", path: "/about" },
   { name: "Contact Us", path: "/contact" },
 ];
 
@@ -26,9 +21,9 @@ export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const { pathname } = useLocation();
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { theme, toggleTheme } = useTheme();
   const { t, language } = useTranslation();
@@ -75,21 +70,21 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-5">
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
             <div className="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center flex-shrink-0">
               <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
                 <rect x="2" y="2" width="5" height="12" rx="1.5" fill="white" />
                 <rect x="9" y="2" width="5" height="8" rx="1.5" fill="white" opacity=".8" />
               </svg>
             </div>
-            <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">TaskFlow</span>
+            <span className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Ponleu</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-7 flex-1 justify-center">
             {NAV_LINKS.map((item) => (
               <Link
                 key={item.path}
-                href={item.path}
+                to={item.path}
                 aria-current={isActive(item.path) ? "page" : undefined}
                 className={`relative text-sm font-medium transition-colors duration-200 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:rounded-full after:bg-brand-500 after:transition-all ${
                   isActive(item.path)
@@ -167,7 +162,7 @@ export default function Navbar() {
               <>
                 {/* Notification Bell */}
                 <Link
-                  href="/dashboard/notifications"
+                  to="/dashboard/notifications"
                   className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 relative"
                   title="Notifications"
                 >
@@ -215,7 +210,7 @@ export default function Navbar() {
                         </div>
 
                         <Link
-                          href="/dashboard/settings"
+                          to="/dashboard/settings"
                           onClick={() => setProfileOpen(false)}
                           className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
                         >
@@ -223,7 +218,7 @@ export default function Navbar() {
                         </Link>
 
                         <Link
-                          href="/dashboard"
+                          to="/dashboard"
                           onClick={() => setProfileOpen(false)}
                           className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
                         >
@@ -231,7 +226,7 @@ export default function Navbar() {
                         </Link>
 
                         <Link
-                          href="/dashboard/notifications"
+                          to="/dashboard/notifications"
                           onClick={() => setProfileOpen(false)}
                           className="flex items-center justify-between w-full px-4 py-2.5 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors duration-200"
                         >
@@ -251,7 +246,7 @@ export default function Navbar() {
                           onClick={() => {
                             setProfileOpen(false);
                             dispatch(logout());
-                            router.push("/login");
+                            navigate("/login");
                           }}
                           className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-slate-700 transition-colors duration-200"
                         >
@@ -265,13 +260,13 @@ export default function Navbar() {
             ) : (
               <>
                 <Link
-                  href="/login"
+                  to="/login"
                   className="hidden sm:inline-flex text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200"
                 >
                   {t("nav.login")}
                 </Link>
                 <Link
-                  href="/register"
+                  to="/register"
                   className="hidden sm:inline-flex bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 shadow-emerald-500/25"
                 >
                   {t("nav.getStarted")}
@@ -302,7 +297,7 @@ export default function Navbar() {
               {NAV_LINKS.map((item) => (
                 <li key={item.path}>
                   <Link
-                    href={item.path}
+                    to={item.path}
                     onClick={() => setMenuOpen(false)}
                     aria-current={isActive(item.path) ? "page" : undefined}
                     className={`block rounded-lg px-3 py-2.5 text-sm font-medium ${
@@ -318,7 +313,7 @@ export default function Navbar() {
               {!user && (
                 <li>
                   <Link
-                    href="/login"
+                    to="/login"
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                   >

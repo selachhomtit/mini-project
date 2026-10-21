@@ -1,5 +1,3 @@
-"use client";
-
 import React, { createContext, useContext, useEffect, useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
@@ -15,7 +13,7 @@ const ThemeContext = createContext<ThemeContextValue>({
 });
 
 // The <html class="dark"> flag is the single source of truth. The inline script in
-// app/layout.tsx sets it before first paint, so there is no flash of the wrong theme.
+// index.html sets it before first paint, so there is no flash of the wrong theme.
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });

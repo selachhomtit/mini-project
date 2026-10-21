@@ -1,5 +1,3 @@
-"use client";
-
 import { useAppSelector } from "@/lib/hooks";
 import { getTranslation } from "./locales";
 

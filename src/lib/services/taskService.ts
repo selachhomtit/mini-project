@@ -71,7 +71,7 @@ function patchTask(id: string, data: TaskPatch) {
 
 export const taskService = baseService.injectEndpoints({
   // Hot reload re-runs this file in development; replace the old endpoints instead of warning.
-  overrideExisting: process.env.NODE_ENV === "development",
+  overrideExisting: import.meta.env.DEV,
   endpoints: (builder) => ({
     // ── Personal tasks (tasks without a project) ───────────────────────────
     getPersonalTasks: builder.query<

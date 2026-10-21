@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { X, Pencil, Loader } from "lucide-react";
 import type { Project } from "@/lib/features/types/task-type";

@@ -24,16 +24,16 @@ const dateOnly = (days: number) => daysFromNow(days).slice(0, 10);
 // ── Users ──────────────────────────────────────────────────────────────────
 export type SeedUser = UserProfile & { password: string };
 
-export const DEMO_EMAIL = "demo@taskflow.com";
+export const DEMO_EMAIL = "demo@ponleu.com";
 export const DEMO_PASSWORD = "Demo@1234";
 
 export const USERS: SeedUser[] = [
   { id: "u1", fullName: "Sokha Chan", username: "sokha", email: DEMO_EMAIL, password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-120) },
-  { id: "u2", fullName: "Dara Meas", username: "dara", email: "dara@taskflow.com", password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-110) },
-  { id: "u3", fullName: "Sreyleak Phan", username: "sreyleak", email: "sreyleak@taskflow.com", password: DEMO_PASSWORD, gender: "FEMALE", isVerified: true, createdAt: daysFromNow(-100) },
-  { id: "u4", fullName: "Vichea Kim", username: "vichea", email: "vichea@taskflow.com", password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-90) },
-  { id: "u5", fullName: "Bopha Sok", username: "bopha", email: "bopha@taskflow.com", password: DEMO_PASSWORD, gender: "FEMALE", isVerified: true, createdAt: daysFromNow(-80) },
-  { id: "u6", fullName: "Rithy Heng", username: "rithy", email: "rithy@taskflow.com", password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-70) },
+  { id: "u2", fullName: "Dara Meas", username: "dara", email: "dara@ponleu.com", password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-110) },
+  { id: "u3", fullName: "Sreyleak Phan", username: "sreyleak", email: "sreyleak@ponleu.com", password: DEMO_PASSWORD, gender: "FEMALE", isVerified: true, createdAt: daysFromNow(-100) },
+  { id: "u4", fullName: "Vichea Kim", username: "vichea", email: "vichea@ponleu.com", password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-90) },
+  { id: "u5", fullName: "Bopha Sok", username: "bopha", email: "bopha@ponleu.com", password: DEMO_PASSWORD, gender: "FEMALE", isVerified: true, createdAt: daysFromNow(-80) },
+  { id: "u6", fullName: "Rithy Heng", username: "rithy", email: "rithy@ponleu.com", password: DEMO_PASSWORD, gender: "MALE", isVerified: true, createdAt: daysFromNow(-70) },
 ];
 
 // ── Teams ──────────────────────────────────────────────────────────────────
@@ -41,7 +41,7 @@ export type SeedTeam = { id: string; name: string; description: string; ownerId:
 export type SeedMember = { id: string; teamId: string; userId: string; role: MemberRole; joinedAt: string };
 
 export const TEAMS: SeedTeam[] = [
-  { id: "t1", name: "ISTAD Capstone", description: "Final-year group project: TaskFlow web app.", ownerId: "u1", createdAt: daysFromNow(-60) },
+  { id: "t1", name: "ISTAD Capstone", description: "Final-year group project: Ponleu web app.", ownerId: "u1", createdAt: daysFromNow(-60) },
   { id: "t2", name: "Angkor Coffee Startup", description: "Delivery app and marketing for a Siem Reap coffee shop.", ownerId: "u2", createdAt: daysFromNow(-45) },
   { id: "t3", name: "Read Cambodia NGO", description: "Workshops and donor reporting across three provinces.", ownerId: "u3", createdAt: daysFromNow(-30) },
 ];
@@ -70,7 +70,7 @@ export type SeedProject = {
 };
 
 export const PROJECTS: SeedProject[] = [
-  { id: "p1", name: "TaskFlow Web App", description: "Next.js + Tailwind v4 frontend for the capstone.", color: "#059669", teamId: "t1", startDate: dateOnly(-50), dueDate: dateOnly(12) },
+  { id: "p1", name: "Ponleu Web App", description: "Next.js + Tailwind v4 frontend for the capstone.", color: "#059669", teamId: "t1", startDate: dateOnly(-50), dueDate: dateOnly(12) },
   { id: "p2", name: "Capstone Report", description: "Written report and slides for the final defense.", color: "#0EA5E9", teamId: "t1", startDate: dateOnly(-20), dueDate: dateOnly(20) },
   { id: "p3", name: "Delivery App MVP", description: "Order coffee and pay with ABA KHQR.", color: "#84CC16", teamId: "t2", startDate: dateOnly(-40), dueDate: dateOnly(6) },
   { id: "p4", name: "Khmer New Year Campaign", description: "Social media promotion for April.", color: "#F59E0B", teamId: "t2", startDate: dateOnly(-10), dueDate: dateOnly(30) },
@@ -119,7 +119,7 @@ export const TASKS: SeedTask[] = [
   task("k4", "Buy Khmer New Year gifts", "DONE", "LOW", -3),
   task("k5", "Submit scholarship form", "TODO", "URGENT", -1, { description: "Bring a copy of the ID card and transcript." }),
 
-  // p1 — TaskFlow Web App
+  // p1 — Ponleu Web App
   task("k10", "Build landing page sections", "DONE", "HIGH", -6, { projectId: "p1", assigneeIds: ["u1", "u5"] }),
   task("k11", "Dark mode for all pages", "DONE", "MEDIUM", -2, { projectId: "p1", assigneeIds: ["u4"] }),
   task("k12", "SEO metadata & sitemap", "IN_REVIEW", "HIGH", 1, { projectId: "p1", assigneeIds: ["u1"] }),

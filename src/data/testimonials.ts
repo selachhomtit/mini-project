@@ -14,7 +14,7 @@ export const TESTIMONIALS: Testimonial[] = [
     initials: "SC",
     avatarBg: "bg-brand-500",
     quote:
-      "Our capstone group used to lose deadlines in Telegram chats. With TaskFlow every task has an owner and a date, and we finished two weeks early.",
+      "Our capstone group used to lose deadlines in Telegram chats. With Ponleu every task has an owner and a date, and we finished two weeks early.",
   },
   {
     name: "Dara Meas",

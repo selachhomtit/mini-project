@@ -11,7 +11,7 @@ const en: Translations = {
   },
   landing: {
     hero: {
-      title: "TaskFlow — Where teams move work forward",
+      title: "Ponleu — Where teams move work forward",
       subtitle: "Boards, lists, and cards. The simplest way to manage your projects.",
       cta: "Get started free",
     },
@@ -48,7 +48,7 @@ const kh: Translations = {
   },
   landing: {
     hero: {
-      title: "TaskFlow — ដែលក្រុមដឹកនាំការងារឱ្យឈានដល់មុខ",
+      title: "Ponleu — ដែលក្រុមដឹកនាំការងារឱ្យឈានដល់មុខ",
       subtitle: "ក្ដារ, បញ្ជីរ។ វិធីសាមញ្ញបំផុតដើម្បីគ្រប់គ្រងគម្រោងរបស់អ្នក។",
       cta: "ចាប់ផ្តើមលេង",
     },

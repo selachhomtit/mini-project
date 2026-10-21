@@ -1,13 +1,19 @@
-"use client";
-
 import { useMemo } from "react";
+import type { TaskStatus } from "@/lib/features/types/task-type";
 
 interface Props {
-  completedTasks: number;
-  pendingTasks: number;
+  statusCounts: Record<TaskStatus, number>;
   overdueTasks: number;
   totalTasks: number;
 }
+
+// Same colours as the board columns, so the chart reads like the kanban.
+const STATUS_SEGMENTS: { status: TaskStatus; label: string; color: string }[] = [
+  { status: "TODO",        label: "To Do",       color: "#94A3B8" },
+  { status: "IN_PROGRESS", label: "In Progress", color: "#3B82F6" },
+  { status: "IN_REVIEW",   label: "In Review",   color: "#ff991f" },
+  { status: "DONE",        label: "Done",        color: "#10B981" },
+];
 
 interface Segment {
   label: string;
@@ -28,24 +34,30 @@ function arcPath(cx: number, cy: number, r: number, startDeg: number, endDeg: nu
   return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
 }
 
-export function TaskStatusDonut({ completedTasks, pendingTasks, overdueTasks, totalTasks }: Props) {
-  const inProgress = Math.max(0, totalTasks - completedTasks - pendingTasks - overdueTasks);
-
+export function TaskStatusDonut({ statusCounts, overdueTasks, totalTasks }: Props) {
   const segments: Segment[] = useMemo(() => {
     const total = totalTasks || 1;
-    const raw: Omit<Segment, "pct">[] = [
-      { label: "Completed",  value: completedTasks, color: "#22c55e" },
-      { label: "In progress", value: inProgress,    color: "#3B82F6" },
-      { label: "Pending",    value: pendingTasks,   color: "#f59e0b" },
-      { label: "Overdue",    value: overdueTasks,   color: "#ef4444" },
-    ];
-    return raw.map((s) => ({ ...s, pct: (s.value / total) * 100 })).filter((s) => s.value > 0);
-  }, [completedTasks, pendingTasks, overdueTasks, inProgress, totalTasks]);
+    return STATUS_SEGMENTS.map(({ status, label, color }) => ({
+      label,
+      color,
+      value: statusCounts[status],
+      pct: (statusCounts[status] / total) * 100,
+    }));
+  }, [statusCounts, totalTasks]);
 
-  const completionPct = totalTasks ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const completionPct = totalTasks ? Math.round((statusCounts.DONE / totalTasks) * 100) : 0;
 
   const CX = 80, CY = 80, R = 60, STROKE = 18;
-  let cursor = -90;
+
+  // Each visible segment's arc, laid end to end starting at 12 o'clock.
+  const arcs = useMemo(() => {
+    const visible = segments.filter((seg) => seg.value > 0);
+    const sweeps = visible.map((seg) => (seg.pct / 100) * 360);
+    return visible.map((seg, i) => {
+      const start = -90 + sweeps.slice(0, i).reduce((sum, s) => sum + s, 0);
+      return { ...seg, path: arcPath(CX, CY, R, start, start + sweeps[i] - 0.5) };
+    });
+  }, [segments]);
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl border border-[#E8E8EF] dark:border-slate-700 p-5 shadow-sm">
@@ -58,22 +70,16 @@ export function TaskStatusDonut({ completedTasks, pendingTasks, overdueTasks, to
             {/* background ring */}
             <circle cx={CX} cy={CY} r={R} fill="none" stroke="#F1F5F9" strokeWidth={STROKE} className="dark:stroke-slate-800" />
 
-            {segments.map((seg, i) => {
-              const sweep = (seg.pct / 100) * 360;
-              const end = cursor + sweep;
-              const path = arcPath(CX, CY, R, cursor, end - 0.5);
-              cursor = end;
-              return (
-                <path
-                  key={i}
-                  d={path}
-                  fill="none"
-                  stroke={seg.color}
-                  strokeWidth={STROKE}
-                  strokeLinecap="round"
-                />
-              );
-            })}
+            {arcs.map((arc) => (
+              <path
+                key={arc.label}
+                d={arc.path}
+                fill="none"
+                stroke={arc.color}
+                strokeWidth={STROKE}
+                strokeLinecap="round"
+              />
+            ))}
 
             {/* centre label */}
             <text x={CX} y={CY - 8} textAnchor="middle" className="fill-slate-950 dark:fill-white" fontSize={22} fontWeight={600}>
@@ -103,6 +109,12 @@ export function TaskStatusDonut({ completedTasks, pendingTasks, overdueTasks, to
             <span className="text-xs text-slate-400">Total</span>
             <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{totalTasks}</span>
           </div>
+          {overdueTasks > 0 && (
+            <div className="flex justify-between">
+              <span className="text-xs text-red-500">Overdue (not done)</span>
+              <span className="text-xs font-bold text-red-500 tabular-nums">{overdueTasks}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

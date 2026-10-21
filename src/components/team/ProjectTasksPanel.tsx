@@ -1,11 +1,9 @@
-"use client";
 import { timeAgo } from "@/lib/utils";
 import CreateProjectTaskModal from "./CreateProjectTaskModal";
 import EditProjectTaskModal from "./EditProjectTaskModal";
 import { useMemo, useState } from "react";
 import {
   MessageSquare,
-  MoreHorizontal,
   Plus,
   Search,
   Trash2,
@@ -31,7 +29,9 @@ import {
   useDeleteProjectMutation,
 } from "@/lib/services/taskService";
 import ParentTaskDetailView from "./ParentTaskDetailView";
+import { useKanbanDnd } from "@/hooks/use-kanban-dnd";
 import UpdateProjectModal from "./modals/UpdateProjectModal";
+import { confirmDialog } from "@/lib/feedback";
 
 type TaskStatus = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
 
@@ -44,10 +44,10 @@ type ColDef = {
 };
 
 const COLUMNS: ColDef[] = [
-  { id: "TODO",        label: "TO DO",       dot: "#97a0af", bg: "#F1F5F9", accent: "#97a0af" },
-  { id: "IN_PROGRESS", label: "IN PROGRESS", dot: "#3B82F6", bg: "#EFF6FF", accent: "#3B82F6" },
-  { id: "IN_REVIEW",   label: "IN REVIEW",   dot: "#ff991f", bg: "#fff7e6", accent: "#ff991f" },
-  { id: "DONE",        label: "DONE",        dot: "#00875a", bg: "#e3fcef", accent: "#00875a" },
+  { id: "TODO",        label: "TO DO",       dot: "#97a0af", bg: "bg-[#F1F5F9] dark:bg-slate-900/70",    accent: "#97a0af" },
+  { id: "IN_PROGRESS", label: "IN PROGRESS", dot: "#3B82F6", bg: "bg-[#EFF6FF] dark:bg-blue-950/40",    accent: "#3B82F6" },
+  { id: "IN_REVIEW",   label: "IN REVIEW",   dot: "#ff991f", bg: "bg-[#fff7e6] dark:bg-orange-950/30",  accent: "#ff991f" },
+  { id: "DONE",        label: "DONE",        dot: "#00875a", bg: "bg-[#e3fcef] dark:bg-emerald-950/40", accent: "#00875a" },
 ];
 
 const PRIORITY_STYLE: Record<string, string> = {
@@ -319,7 +319,7 @@ function CommentsDrawer({ task, onClose }: { task: Task; onClose: () => void }) 
                         <Edit2 size={11} />
                       </button>
                       <button
-                        onClick={() => { if (confirm("Delete this comment?")) deleteComment({ taskId: task.id, commentId: c.id }); }}
+                        onClick={async () => { if (await confirmDialog({ title: "Delete this comment?" })) deleteComment({ taskId: task.id, commentId: c.id }); }}
                         className="text-slate-400 hover:text-red-600"
                         title="Delete"
                       >
@@ -389,6 +389,8 @@ function TeamTaskCard({
   onOpenTask,
   onDelete,
   onComment,
+  dragProps,
+  isDragging,
 }: {
   task: Task;
   col: ColDef;
@@ -397,6 +399,8 @@ function TeamTaskCard({
   onDelete: (id: string) => void;
   onComment: (task: Task) => void;
   onOpenTask: (task: Task) => void;
+  dragProps: React.HTMLAttributes<HTMLDivElement> & { draggable: boolean };
+  isDragging: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
@@ -412,8 +416,10 @@ function TeamTaskCard({
   };
 
   return (
+    <>
     <div
-      className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 border-l-[3px] p-3.5 space-y-3 hover:shadow-md transition-all group"
+      {...dragProps}
+      className={`bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 border-l-[3px] p-3.5 space-y-3 hover:shadow-md transition-all group cursor-grab active:cursor-grabbing ${isDragging ? "opacity-40" : ""}`}
       style={{ borderLeftColor: col.accent }}
     >
       {/* ── Header row ── */}
@@ -465,13 +471,10 @@ function TeamTaskCard({
             <MessageSquare size={13} />
           </button>
           <button
-            onClick={() => { if (confirm("Delete this task?")) onDelete(task.id); }}
+            onClick={async () => { if (await confirmDialog({ title: "Delete this task?" })) onDelete(task.id); }}
             className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-600"
           >
             <Trash2 size={13} />
-          </button>
-          <button className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-slate-600">
-            <MoreHorizontal size={13} />
           </button>
         </div>
       </div>
@@ -525,16 +528,17 @@ function TeamTaskCard({
           </div>
         </div>
       )}
-
-      {/* Edit Modal */}
-      {showEdit && (
-        <EditProjectTaskModal
-          task={task}
-          projectId={projectId}
-          onClose={() => setShowEdit(false)}
-        />
-      )}
     </div>
+
+    {/* Edit Modal — kept outside the draggable card so its inputs behave normally */}
+    {showEdit && (
+      <EditProjectTaskModal
+        task={task}
+        projectId={projectId}
+        onClose={() => setShowEdit(false)}
+      />
+    )}
+    </>
   );
 }
 
@@ -583,6 +587,8 @@ export default function ProjectTasksPanel({ project }: { project: Project }) {
     deleteTask(id);
   };
 
+  const dnd = useKanbanDnd<TaskStatus>(handleMove);
+
   if (activeParentTask) {
     return (
       <ParentTaskDetailView
@@ -612,7 +618,7 @@ export default function ProjectTasksPanel({ project }: { project: Project }) {
             Edit
           </button>
           <button
-            onClick={() => { if (confirm("Delete this project?")) deleteProject(project.id); }}
+            onClick={async () => { if (await confirmDialog({ title: `Delete "${project.name}"?`, description: "All tasks in this project will be deleted too." })) deleteProject(project.id); }}
             className="text-xs px-3 py-1.5 rounded-md border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-1.5"
           >
             <Trash2 size={14} />
@@ -646,7 +652,7 @@ export default function ProjectTasksPanel({ project }: { project: Project }) {
         </div>
 
         {/* ── Kanban columns ── */}
-        <main className="flex-1 overflow-auto p-5">
+        <div className="flex-1 overflow-auto p-5">
           <div className="flex gap-4 min-w-max h-full">
             {COLUMNS.map((col) => {
               const colTasks = filteredTasks.filter((t) => t.status === col.id);
@@ -671,12 +677,12 @@ export default function ProjectTasksPanel({ project }: { project: Project }) {
                   </div>
 
                   <div
-                    className="flex-1 rounded-xl p-2 flex flex-col gap-2"
-                    style={{ backgroundColor: col.bg }}
+                    {...dnd.columnProps(col.id)}
+                    className={`flex-1 rounded-xl p-2 flex flex-col gap-2 transition-shadow ${col.bg} ${dnd.isOver(col.id) ? "ring-2 ring-brand-500 ring-offset-2 dark:ring-offset-slate-950" : ""}`}
                   >
                     {isLoading
                       ? Array.from({ length: 2 }).map((_, i) => (
-                          <div key={i} className="animate-pulse bg-white rounded-lg h-28 opacity-60" />
+                          <div key={i} className="animate-pulse bg-white dark:bg-slate-800 rounded-lg h-28 opacity-60" />
                         ))
                       : colTasks.map((task) => (
                           <TeamTaskCard
@@ -688,6 +694,8 @@ export default function ProjectTasksPanel({ project }: { project: Project }) {
                             onDelete={handleDelete}
                             onComment={setCommentTask}
                             onOpenTask={setActiveParentTask}
+                            dragProps={dnd.cardProps(task.id, col.id)}
+                            isDragging={dnd.draggingId === task.id}
                           />
                         ))}
 
@@ -701,7 +709,7 @@ export default function ProjectTasksPanel({ project }: { project: Project }) {
               );
             })}
           </div>
-        </main>
+        </div>
       </div>
 
       {commentTask && (

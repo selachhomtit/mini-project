@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import type { Team } from "@/lib/features/types/task-type";
 import { useUpdateTeamMutation } from "@/lib/services/teamService";

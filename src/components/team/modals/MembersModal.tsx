@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { X, Trash2, Shield, Users } from "lucide-react";
 import type { Team, TeamMember } from "@/lib/features/types/task-type";
@@ -9,6 +7,7 @@ import {
   useRemoveMemberMutation,
 } from "@/lib/services/teamService";
 import { getAvatarColor, getInitials } from "@/lib/features/team/team.utils";
+import { confirmDialog } from "@/lib/feedback";
 
 type Props = {
   team: Team;
@@ -40,9 +39,11 @@ export default function MembersModal({ team, onClose }: Props) {
 
   const handleRemoveMember = async (member: TeamMember) => {
     if (
-      confirm(
-        `Remove ${member.user.fullName || member.user.username} from team?`
-      )
+      await confirmDialog({
+        title: `Remove ${member.user.fullName || member.user.username}?`,
+        description: "They will lose access to this team's projects and tasks.",
+        confirmLabel: "Remove",
+      })
     ) {
       await removeMember({
         teamId: team.id,

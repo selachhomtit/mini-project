@@ -25,7 +25,20 @@ import type {
   UserProfile,
 } from "@/lib/features/types/task-type";
 
-const STORAGE_KEY = "taskflow-demo-db-v1";
+const STORAGE_KEY = "ponleu-db-v1";
+/** Key used before the TaskFlow → Ponleu rename; read once so saved data carries over. */
+const LEGACY_STORAGE_KEY = "taskflow-demo-db-v1";
+
+function loadSaved(): string | null {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) return saved;
+  const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+  if (!legacy) return null;
+  const migrated = legacy.replace(/@taskflow\.com/g, "@ponleu.com");
+  localStorage.setItem(STORAGE_KEY, migrated);
+  localStorage.removeItem(LEGACY_STORAGE_KEY);
+  return migrated;
+}
 
 const seed = () => ({
   users: structuredClone(USERS),
@@ -47,7 +60,7 @@ let cache: Db | null = null;
 export function db(): Db {
   if (cache) return cache;
   try {
-    const saved = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+    const saved = typeof window !== "undefined" ? loadSaved() : null;
     cache = saved ? (JSON.parse(saved) as Db) : seed();
   } catch {
     cache = seed();

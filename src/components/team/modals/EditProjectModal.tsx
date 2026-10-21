@@ -1,8 +1,7 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { X, Calendar, Palette } from "lucide-react";
 import type { Project } from "@/lib/features/types/task-type";
+import { toast } from "@/lib/feedback";
 
 type Props = {
   project: Project;
@@ -35,7 +34,7 @@ export default function EditProjectModal({ project, onClose, onSave }: Props) {
     e.preventDefault();
     
     if (!name.trim()) {
-      alert("Project name is required");
+      toast.error("Project name is required");
       return;
     }
 

@@ -17,7 +17,7 @@ function session(userId: string): AuthResponse {
 
 export const authService = baseService.injectEndpoints({
   // Hot reload re-runs this file in development; replace the old endpoints instead of warning.
-  overrideExisting: process.env.NODE_ENV === "development",
+  overrideExisting: import.meta.env.DEV,
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, { email: string; password: string }>({
       async queryFn({ email, password }) {

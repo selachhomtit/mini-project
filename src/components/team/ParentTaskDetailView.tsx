@@ -1,12 +1,9 @@
-"use client";
-
 import { useMemo, useState } from "react";
 import {
   ArrowLeft,
   Calendar,
   Check,
   Edit2,
-  MoreHorizontal,
   Plus,
   Search,
   Trash2,
@@ -20,6 +17,7 @@ import {
   useDeleteTaskMutation,
 } from "@/lib/services/taskService";
 import CreateSubtaskModal from "./CreateSubtaskModal";
+import { confirmDialog } from "@/lib/feedback";
 
 type TaskStatus = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
 
@@ -210,13 +208,10 @@ function SubtaskCard({
               <Edit2 size={13} />
             </button>
             <button
-              onClick={() => { if (confirm("Delete this subtask?")) onDelete(task.id); }}
+              onClick={async () => { if (await confirmDialog({ title: "Delete this subtask?" })) onDelete(task.id); }}
               className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-600"
             >
               <Trash2 size={13} />
-            </button>
-            <button className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-slate-600">
-              <MoreHorizontal size={13} />
             </button>
           </div>
         )}
@@ -300,7 +295,7 @@ export default function ParentTaskDetailView({
   };
 
   const handleDeleteParentTask = async () => {
-    if (!confirm("Delete this parent task?")) return;
+    if (!(await confirmDialog({ title: "Delete this task?", description: "The task and all of its subtasks will be removed." }))) return;
     await deleteTask(task.id);
     onBack();
   };
@@ -373,7 +368,7 @@ export default function ParentTaskDetailView({
         </div>
 
         {/* ── Kanban columns ── */}
-        <main className="flex-1 overflow-auto p-5">
+        <div className="flex-1 overflow-auto p-5">
           <div className="flex gap-4 min-w-max h-full">
             {COLUMNS.map((col) => {
               const colTasks = filteredSubtasks.filter((t) => t.status === col.id);
@@ -426,7 +421,7 @@ export default function ParentTaskDetailView({
               );
             })}
           </div>
-        </main>
+        </div>
       </div>
 
       {showCreateSubtask && (

@@ -1,5 +1,3 @@
-"use client";
-
 import { useMemo } from "react";
 
 type Priority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
@@ -15,13 +13,6 @@ interface UpcomingTask {
 interface Props {
   tasks: UpcomingTask[];
 }
-
-const PRIORITY_COLOR: Record<Priority, string> = {
-  URGENT: "#ef4444",
-  HIGH:   "#f97316",
-  MEDIUM: "#f59e0b",
-  LOW:    "#059669",
-};
 
 function buildWeek(tasks: UpcomingTask[]) {
   const days: { date: string; label: string; short: string; count: number; urgent: number }[] = [];

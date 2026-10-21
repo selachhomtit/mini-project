@@ -1,7 +1,5 @@
-"use client";
-
-import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { Link } from "react-router";
 import KanbanDemo from "./KanbanDemo";
 
 
@@ -32,13 +30,13 @@ export default function Hero() {
         {/* CTA Buttons */}
         <div className="flex flex-col w-full sm:w-auto sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 px-4 sm:px-0">
           <Link
-            href="/register"
+            to="/register"
             className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 shadow-emerald-500/25 text-sm sm:text-base"
           >
             {t("landing.hero.cta")} — no credit card
           </Link>
           <Link
-            href="/login"
+            to="/login"
             className="inline-flex items-center justify-center gap-1.5 bg-transparent hover:bg-slate-100 dark:hover:bg-ink-soft text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-gray-600 font-semibold px-6 py-3 rounded-lg transition-all duration-200 hover:shadow-sm hover:-translate-y-0.5 text-sm sm:text-base"
           >
             Sign in to workspace

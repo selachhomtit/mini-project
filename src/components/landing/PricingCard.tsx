@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Check } from "lucide-react";
+import { Link } from "react-router";
 import { formatPrice, type Plan } from "@/data/pricing";
 
 export default function PricingCard({ plan }: { plan: Plan }) {
@@ -44,7 +44,7 @@ export default function PricingCard({ plan }: { plan: Plan }) {
       </ul>
 
       <Link
-        href={plan.href}
+        to={plan.href}
         className={`mt-8 inline-flex justify-center rounded-lg px-5 py-3 text-sm font-semibold transition-colors ${
           highlight
             ? "bg-brand-500 text-white hover:bg-brand-600"

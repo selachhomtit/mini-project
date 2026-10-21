@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { useCreateTeamMutation } from "@/lib/services/teamService";
 import Modal from "./Modal";

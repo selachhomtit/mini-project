@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { X } from "lucide-react";
 import {
@@ -65,13 +63,13 @@ export default function CreateSubtaskModal({
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="bg-white rounded-t-2xl sm:rounded-xl shadow-2xl w-full sm:max-w-md max-h-[92dvh] overflow-y-auto dark:bg-slate-900">
-        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#F1F5F9]">
-          <h2 className="text-base font-bold text-[#1E293B]">
+        <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#F1F5F9] dark:border-slate-800">
+          <h2 className="text-base font-bold text-[#1E293B] dark:text-white">
             New Subtask
           </h2>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-[#94A3B8] hover:bg-[#F1F5F9] transition-colors"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-[#94A3B8] hover:bg-[#F1F5F9] transition-colors dark:hover:bg-slate-800"
           >
             <X size={15} />
           </button>
@@ -79,39 +77,39 @@ export default function CreateSubtaskModal({
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           {apiError && (
-            <p className="text-sm text-[#EF4444] bg-[#FEE2E2] border border-[#FECACA] p-3 rounded-lg">
+            <p className="text-sm text-[#EF4444] bg-[#FEE2E2] border border-[#FECACA] p-3 rounded-lg dark:bg-red-950 dark:border-red-900">
               {apiError}
             </p>
           )}
 
           <div>
-            <label className="block text-sm font-semibold text-[#64748B] mb-1.5">Title *</label>
+            <label className="block text-sm font-semibold text-[#64748B] mb-1.5 dark:text-slate-400">Title *</label>
             <input
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
               placeholder="Subtask title"
-              className="w-full h-11 px-3 rounded-md border border-[#D1D5DB] text-sm outline-none bg-white focus:border-[#059669] transition-colors"
+              className="w-full h-11 px-3 rounded-md border border-[#D1D5DB] text-sm outline-none bg-white focus:border-[#059669] transition-colors dark:bg-slate-900 dark:border-slate-600 dark:text-white"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-[#64748B] mb-1.5">Description</label>
+            <label className="block text-sm font-semibold text-[#64748B] mb-1.5 dark:text-slate-400">Description</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={3}
               placeholder="Subtask details…"
-              className="w-full px-3 py-3 rounded-xl border border-[#D1D5DB] text-sm outline-none focus:border-[#059669] bg-white resize-none transition-colors"
+              className="w-full px-3 py-3 rounded-xl border border-[#D1D5DB] text-sm outline-none focus:border-[#059669] bg-white resize-none transition-colors dark:bg-slate-900 dark:border-slate-600 dark:text-white"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-semibold text-[#64748B] mb-1.5">Priority</label>
+              <label className="block text-sm font-semibold text-[#64748B] mb-1.5 dark:text-slate-400">Priority</label>
               <select
                 value={form.priority}
                 onChange={(e) => setForm({ ...form, priority: e.target.value })}
-                className="w-full h-11 px-3 rounded-md border border-[#D1D5DB] text-sm outline-none focus:border-[#059669] bg-white"
+                className="w-full h-11 px-3 rounded-md border border-[#D1D5DB] text-sm outline-none focus:border-[#059669] bg-white dark:bg-slate-900 dark:border-slate-600 dark:text-white"
               >
                 <option value="LOW">Low</option>
                 <option value="MEDIUM">Medium</option>
@@ -121,12 +119,12 @@ export default function CreateSubtaskModal({
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-[#64748B] mb-1.5">Due date</label>
+              <label className="block text-sm font-semibold text-[#64748B] mb-1.5 dark:text-slate-400">Due date</label>
               <input
                 type="date"
                 value={form.dueDate}
                 onChange={(e) => setForm({ ...form, dueDate: e.target.value })}
-                className="w-full h-11 px-3 rounded-md border border-[#D1D5DB] text-sm outline-none focus:border-[#059669] bg-white transition-colors"
+                className="w-full h-11 px-3 rounded-md border border-[#D1D5DB] text-sm outline-none focus:border-[#059669] bg-white transition-colors dark:bg-slate-900 dark:border-slate-600 dark:text-white"
               />
             </div>
           </div>
@@ -135,7 +133,7 @@ export default function CreateSubtaskModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 h-12 rounded-xl border border-[#D1D5DB] text-sm font-semibold text-[#64748B] hover:bg-[#F1F5F9] transition-colors"
+              className="flex-1 h-12 rounded-xl border border-[#D1D5DB] text-sm font-semibold text-[#64748B] hover:bg-[#F1F5F9] transition-colors dark:text-slate-400 dark:border-slate-600 dark:hover:bg-slate-800"
             >
               Cancel
             </button>

@@ -1,0 +1,10 @@
+{
+  "name": "Ponleu — Smart Task Manager",
+  "short_name": "Ponleu",
+  "description": "Ponleu is a smart task manager built in Phnom Penh. Plan projects with Kanban boards, assign tasks to your team, and track progress in English or Khmer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#059669",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

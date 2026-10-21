@@ -1,24 +1,20 @@
-"use client";
-
 import DashboardHeader from "@/components/DashboardHeader";
+import { useSearchParams } from "react-router";
+import { useState } from "react";
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import type { Team } from "@/lib/features/types/task-type";
 import {
   useDeleteTeamMutation,
   useGetTeamsQuery,
 } from "@/lib/services/teamService";
 import { useGetTaskQuery, useGetProjectQuery } from "@/lib/services/taskService";
-
-import TeamHeader from "./TeamHeader";
 import TeamGrid from "./TeamGrid";
 import TeamDetailView from "./TeamDetailView";
 import CreateTeamModal from "./modals/CreateTeamModal";
 import EditTeamModal from "./modals/EditTeamModal";
 
 export default function TeamPageClient() {
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const taskId = searchParams?.get("taskId");
 
   const [showCreate, setShowCreate] = useState(false);
@@ -32,23 +28,19 @@ export default function TeamPageClient() {
 
   const teams = teamsPage?.content ?? [];
 
-  useEffect(() => {
-    if (project && project.teamId && teams.length > 0 && !activeTeam) {
-      const team = teams.find((t) => t.id === project.teamId);
-      if (team) {
-        const idx = teams.indexOf(team);
-        setActiveTeam({ team, idx });
-      }
-    }
-  }, [project, teams, activeTeam]);
+  // A comment notification (?taskId=…) opens the team that owns the task, until the user goes back.
+  const [linkDismissed, setLinkDismissed] = useState(false);
+  const linkedIdx = project?.teamId ? teams.findIndex((t) => t.id === project.teamId) : -1;
+  const shownTeam =
+    activeTeam ?? (!linkDismissed && linkedIdx >= 0 ? { team: teams[linkedIdx], idx: linkedIdx } : null);
 
-  if (activeTeam) {
+  if (shownTeam) {
     return (
       <div className="flex flex-col h-full overflow-hidden">
         <TeamDetailView
-          team={activeTeam.team}
-          idx={activeTeam.idx}
-          onBack={() => setActiveTeam(null)}
+          team={shownTeam.team}
+          idx={shownTeam.idx}
+          onBack={() => { setActiveTeam(null); setLinkDismissed(true); }}
         />
       </div>
     );

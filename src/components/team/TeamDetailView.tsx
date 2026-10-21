@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -8,6 +6,8 @@ import {
   Users,
   Search,
   Plus,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 
 import type { Project, Team } from "@/lib/features/types/task-type";
@@ -25,7 +25,6 @@ import {
 import InviteModal from "./modals/InviteModal";
 import MembersModal from "./modals/MembersModal";
 import ProjectTasksPanel from "./ProjectTasksPanel";
-
 import CreateProjectModal from "../team/modals/CreateProjectModal"; 
 
 type Props = {
@@ -40,6 +39,7 @@ export default function TeamDetailView({ team, idx, onBack }: Props) {
   const [showCreateProject, setShowCreateProject] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projectSearch, setProjectSearch] = useState("");
+  const [projectsCollapsed, setProjectsCollapsed] = useState(false);
 
   const gradientCls = TEAM_GRADIENTS[idx % TEAM_GRADIENTS.length];
   const iconBgCls = TEAM_ICON_BG[idx % TEAM_ICON_BG.length];
@@ -57,7 +57,7 @@ export default function TeamDetailView({ team, idx, onBack }: Props) {
   const members = membersPage?.content ?? [];
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-w-0">
       {/* Header with gradient */}
       <div className={`bg-gradient-to-r ${gradientCls} px-4 sm:px-6 pt-4 sm:pt-6 pb-4 sm:pb-5`}>
         <div className="flex items-start justify-between gap-4">
@@ -160,13 +160,48 @@ export default function TeamDetailView({ team, idx, onBack }: Props) {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Projects Sidebar */}
+      <div className="flex flex-1 min-h-0 min-w-0 overflow-hidden">
+        {/* Projects Sidebar — collapsed rail */}
+        {projectsCollapsed ? (
+          <div className="w-12 shrink-0 border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 overflow-y-auto overflow-x-hidden flex flex-col items-center gap-2 py-3">
+            <button
+              onClick={() => setProjectsCollapsed(false)}
+              title="Show projects"
+              aria-label="Show projects"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <PanelLeftOpen size={16} />
+            </button>
+            {projects.map((project) => (
+              <button
+                key={project.id}
+                onClick={() => setSelectedProject(project)}
+                title={project.name}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-[11px] font-bold text-white transition-all ${
+                  selectedProject?.id === project.id
+                    ? "ring-2 ring-offset-2 ring-slate-400 dark:ring-offset-slate-900"
+                    : "opacity-70 hover:opacity-100"
+                }`}
+                style={{ backgroundColor: project.color || "#059669" }}
+              >
+                {project.name.charAt(0).toUpperCase()}
+              </button>
+            ))}
+          </div>
+        ) : (
         <div className="w-56 shrink-0 border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 overflow-auto">
-          <div className="px-4 pt-4 pb-2">
+          <div className="flex items-center justify-between pl-4 pr-2 pt-3 pb-1">
             <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               Projects
             </p>
+            <button
+              onClick={() => setProjectsCollapsed(true)}
+              title="Hide projects"
+              aria-label="Hide projects"
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition-colors"
+            >
+              <PanelLeftClose size={15} />
+            </button>
           </div>
 
           <div className="px-3 mb-3">
@@ -231,9 +266,10 @@ export default function TeamDetailView({ team, idx, onBack }: Props) {
             ))
           )}
         </div>
+        )}
 
         {/* Project Tasks Area */}
-        <div className="flex-1 overflow-hidden bg-white dark:bg-slate-900">
+        <div className="flex-1 min-w-0 overflow-hidden bg-white dark:bg-slate-900">
           {selectedProject ? (
             <ProjectTasksPanel project={selectedProject} />
           ) : (

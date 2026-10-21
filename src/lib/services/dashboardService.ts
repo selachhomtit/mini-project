@@ -1,3 +1,4 @@
+import type { TaskStatus } from "@/lib/features/types/task-type";
 import { baseService, currentUserId } from "./baseService";
 import { db, delay, ok, teamIdsOf, toProject } from "./localDb";
 
@@ -32,6 +33,13 @@ export interface DashboardResponse {
   completedTasks: number;
   pendingTasks: number;
   overdueTasks: number;
+  /** Open tasks due within the next 7 days (today included). */
+  dueSoonTasks: number;
+  /** Top-level task count per board column. */
+  statusCounts: Record<TaskStatus, number>;
+  personalTasks: number;
+  personalCompleted: number;
+  totalTeams: number;
   totalTeamMembers: number;
   upcomingDueDates: UpcomingTaskResponse[];
   recentActivities: ActivityResponse[];
@@ -46,15 +54,28 @@ function buildDashboard(userId: string): DashboardResponse {
   const projectIds = new Set(projects.map((p) => p.id));
   const tasks = d.tasks.filter((t) => !t.parentTaskId && (!t.projectId || projectIds.has(t.projectId)));
   const today = new Date().toISOString().slice(0, 10);
+  const weekAhead = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
   const open = tasks.filter((t) => t.status !== "DONE");
+  const personal = tasks.filter((t) => !t.projectId);
+  const countStatus = (s: TaskStatus) => tasks.filter((t) => t.status === s).length;
 
   return {
     totalProjects: projects.length,
     totalTasks: tasks.length,
     myTasks: tasks.filter((t) => t.assigneeIds.includes(userId)).length,
-    completedTasks: tasks.filter((t) => t.status === "DONE").length,
+    completedTasks: countStatus("DONE"),
     pendingTasks: open.filter((t) => !t.dueDate || t.dueDate >= today).length,
     overdueTasks: open.filter((t) => t.dueDate && t.dueDate < today).length,
+    dueSoonTasks: open.filter((t) => t.dueDate && t.dueDate >= today && t.dueDate <= weekAhead).length,
+    statusCounts: {
+      TODO: countStatus("TODO"),
+      IN_PROGRESS: countStatus("IN_PROGRESS"),
+      IN_REVIEW: countStatus("IN_REVIEW"),
+      DONE: countStatus("DONE"),
+    },
+    personalTasks: personal.length,
+    personalCompleted: personal.filter((t) => t.status === "DONE").length,
+    totalTeams: teams.size,
     totalTeamMembers: new Set(d.members.filter((m) => teams.has(m.teamId)).map((m) => m.userId)).size,
     upcomingDueDates: open
       .filter((t) => t.dueDate && t.dueDate >= today)
@@ -83,14 +104,14 @@ function buildDashboard(userId: string): DashboardResponse {
 
 const dashboardService = baseService.injectEndpoints({
   // Hot reload re-runs this file in development; replace the old endpoints instead of warning.
-  overrideExisting: process.env.NODE_ENV === "development",
+  overrideExisting: import.meta.env.DEV,
   endpoints: (builder) => ({
     getDashboard: builder.query<DashboardResponse, void>({
       async queryFn(_arg, { getState }) {
         await delay();
         return ok(buildDashboard(currentUserId(getState)));
       },
-      providesTags: ["Dashboard", "Task", "Project", "Team"],
+      providesTags: ["Dashboard", "Task", "PersonalTask", "ProjectTask", "Project", "Team"],
     }),
   }),
 });

@@ -1,8 +1,8 @@
-"use client";
 import { useState } from "react";
 import { Calendar, Edit2, Check, X, Trash2 } from "lucide-react";
 import type { Task } from "@/lib/features/types/task-type";
 import { useUpdateProjectTaskMutation } from "@/lib/services/taskService";
+import { confirmDialog } from "@/lib/feedback";
 
 type TaskStatus = "TODO" | "IN_PROGRESS" | "IN_REVIEW" | "DONE";
 
@@ -187,7 +187,7 @@ export default function SubtaskRow({ subtask, col, projectId, onMove, onDelete }
             </button>
             {onDelete && (
               <button
-                onClick={() => { if (confirm("Delete this subtask?")) onDelete(subtask.id); }}
+                onClick={async () => { if (await confirmDialog({ title: "Delete this subtask?" })) onDelete(subtask.id); }}
                 className="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-red-600"
               >
                 <Trash2 size={13} />

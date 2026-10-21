@@ -1,12 +1,12 @@
-# TaskFlow — Smart Task Manager for Cambodian Teams
+# Ponleu — Smart Task Manager for Cambodian Teams
 
-ISTAD Frontend Mini Project. TaskFlow is a task and project manager for students, startups, and NGOs in Cambodia. It has Kanban boards, team workspaces, subtasks, comments, notifications, and dashboard charts, in **English and ខ្មែរ**.
+ISTAD Frontend Mini Project. Ponleu is a task and project manager for students, startups, and NGOs in Cambodia. It has Kanban boards, team workspaces, subtasks, comments, notifications, and dashboard charts, in **English and ខ្មែរ**.
 
 ## Tech stack
 
 | Area | Tools |
 | --- | --- |
-| Framework | Next.js 16 (App Router), React 19, React Compiler |
+| Framework | React 19 + Vite 7, React Router 7, React Compiler |
 | Language | TypeScript (strict) |
 | Styling | **Tailwind CSS v4** (`@theme` brand tokens, custom animations, class-based dark mode) |
 | UI | shadcn/ui (Radix), lucide-react icons, Framer Motion |
@@ -19,7 +19,6 @@ ISTAD Frontend Mini Project. TaskFlow is a task and project manager for students
 | --- | --- |
 | `/` Home | Hero + interactive Kanban demo, audiences, features, how it works, testimonials, pricing, CTA |
 | `/features` | Hero + stats, core features, "Designed for Cambodian teams", how it works, CTA |
-| `/pricing` | Plans (USD + KHR), comparison table, FAQ, CTA |
 | `/about` | Hero, stats, advisors, team |
 | `/contact` | Hero, contact info + form, office hours + map |
 | `/login`, `/register`, `/forgot-password`, `/reset-password` | Auth |
@@ -34,7 +33,7 @@ All content is **static data** in [`src/data/`](src/data). There is no backend o
 
 | Email | Password |
 | --- | --- |
-| `demo@taskflow.com` | `Demo@1234` |
+| `demo@ponleu.com` | `Demo@1234` |
 
 The login page has a **Use demo** button that fills these in. You can also register a new account.
 
@@ -42,15 +41,20 @@ The login page has a **Use demo** button that fills these in. You can also regis
 
 - **Responsive**: mobile-first layouts and a mobile navigation menu, tested down to 360px.
 - **Dark mode**: toggle in the navbar. It follows the OS setting by default, is saved in `localStorage`, and is applied before first paint so the page never flashes white.
-- **SEO**: per-page `metadata` (title template, description, canonical URL, Open Graph, Twitter), generated `sitemap.xml`, `robots.txt`, web manifest, Open Graph image, and JSON-LD (`SoftwareApplication`, `FAQPage`). Private pages are `noindex`.
+- **SEO**: per-page `<PageMeta>` (title, description, canonical URL, Open Graph, Twitter) using React 19 document metadata, `sitemap.xml` and `robots.txt` generated at build time, web manifest, and JSON-LD (`SoftwareApplication`, `FAQPage`). Private pages are `noindex`. Note: this is a client-rendered SPA, so crawlers that don't run JavaScript only see the defaults in `index.html`.
 - **i18n**: English / Khmer switcher, with the Suwannaphum Khmer font.
-- **Brand identity**: `brand-*` colour scale and animations defined in [`src/app/globals.css`](src/app/globals.css).
+- **Brand identity**: `brand-*` colour scale and animations defined in [`src/index.css`](src/index.css).
 
 ## Project structure
 
 ```
 src/
-├── app/                 # Routes (App Router), layouts, SEO files (sitemap, robots, manifest, OG image)
+├── main.tsx             # Entry point
+├── App.tsx              # Route table (React Router) + per-page metadata
+├── layouts/             # RootLayout (navbar/footer), DashboardLayout (sidebar)
+├── pages/               # One component per route (public, auth/, dashboard/)
+├── routes/guards.tsx    # RequireAuth / RedirectIfAuthenticated route guards
+├── providers/           # Redux StoreProvider
 ├── components/
 │   ├── common/          # Shared building blocks (SectionHeader, Reveal)
 │   ├── landing/         # Marketing sections (Hero, Features, Pricing, ...)
@@ -68,18 +72,21 @@ src/
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm run build      # production build
+npm run dev        # http://localhost:5173
+npm run build      # type-check + production build to dist/
+npm run preview    # serve the production build
 npm run lint
 ```
 
 Optional `.env.local`:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://your-domain.com # used for canonical URLs and sitemap
+VITE_SITE_URL=https://your-domain.com # used for canonical URLs and sitemap
 ```
 
-To reset the demo data, clear the `taskflow-demo-db-v1` key in your browser's localStorage.
+When deploying, configure your host to serve `index.html` for every route (SPA fallback) so deep links like `/dashboard/tasks` work.
+
+To reset the demo data, clear the `ponleu-db-v1` key in your browser's localStorage.
 
 ## Demo video
 

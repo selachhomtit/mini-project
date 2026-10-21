@@ -1,5 +1,3 @@
-"use client";
-
 import { timeAgo } from "@/lib/utils";
 import { useState } from "react";
 import { Check, Edit2, Trash2, X, Send } from "lucide-react";

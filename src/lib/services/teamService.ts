@@ -4,7 +4,7 @@ import { db, delay, fail, newId, now, ok, paginate, save, teamIdsOf, toMember, t
 
 export const teamService = baseService.injectEndpoints({
   // Hot reload re-runs this file in development; replace the old endpoints instead of warning.
-  overrideExisting: process.env.NODE_ENV === "development",
+  overrideExisting: import.meta.env.DEV,
   endpoints: (builder) => ({
     // ── Teams ──────────────────────────────────────────────────────────────
     getTeams: builder.query<PageResponse<Team>, { page?: number; size?: number }>({

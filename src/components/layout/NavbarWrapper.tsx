@@ -1,10 +1,8 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
+import { useLocation } from "react-router";
 
 export default function NavbarWrapper() {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   if (pathname.startsWith("/dashboard")) return null;
   return <Navbar />;
 }

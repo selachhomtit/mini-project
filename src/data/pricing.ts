@@ -53,39 +53,6 @@ export const PLANS: Plan[] = [
   },
 ];
 
-export type ComparisonRow = { label: string; values: [string, string, string] };
-
-export const COMPARISON: ComparisonRow[] = [
-  { label: "Projects", values: ["3", "Unlimited", "Unlimited"] },
-  { label: "Members per team", values: ["5", "Unlimited", "Unlimited"] },
-  { label: "Subtasks & comments", values: ["—", "✓", "✓"] },
-  { label: "Dashboard charts", values: ["Basic", "Full", "Full"] },
-  { label: "Khmer interface", values: ["✓", "✓", "✓"] },
-  { label: "Support", values: ["Community", "Email (24h)", "Dedicated manager"] },
-  { label: "Payment", values: ["—", "ABA / KHQR / Card", "Invoice"] },
-];
-
-export type Faq = { q: string; a: string };
-
-export const PRICING_FAQ: Faq[] = [
-  {
-    q: "Is the Student plan really free?",
-    a: "Yes. The Student plan is free forever with no credit card. It is designed for university and bootcamp group projects.",
-  },
-  {
-    q: "Can I pay in Cambodian riel?",
-    a: "Prices are set in US dollars, but you can pay the riel equivalent through ABA Pay or any bank that supports Bakong KHQR.",
-  },
-  {
-    q: "What happens when my Pro trial ends?",
-    a: "Your workspace moves back to the Student plan. Nothing is deleted — you just can't create more than 3 projects until you upgrade.",
-  },
-  {
-    q: "Do you offer discounts for NGOs?",
-    a: "Registered NGOs and public schools in Cambodia get 50% off the Organization plan. Contact us with your registration letter.",
-  },
-];
-
 export function formatPrice(plan: Plan): { main: string; sub: string } {
   if (plan.priceUsd === null) return { main: "Custom", sub: "Tailored to your organization" };
   if (plan.priceUsd === 0) return { main: "$0", sub: "Free forever" };
